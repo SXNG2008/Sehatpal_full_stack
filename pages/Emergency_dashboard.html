@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emergency Dashboard - Golden Hour</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/styles.css">
+</head>
+<body class="body-emergency">
+<header class="emergency-header header-bg-emergency">
+<div class="container flex justify-between items-center">
+<a href="emergency_scan.html" class="back-btn" style="color: white; text-decoration: none;">← Back</a>
+<h2 class="text-xl font-bold">Emergency Mode Active</h2>
+<div class="spacer-50"></div>
+</div>
+</header>
+<main class="container main-content mt-8">
+<div class="golden-hour-alert">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<circle cx="12" cy="12" r="10"></circle>
+<polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+<div>
+<div class="text-sm uppercase tracking-wide opacity-80">Golden Hour Active</div>
+<div>Time is critical. Essential medical information displayed below.</div>
+</div>
+</div>
+<div class="flex flex-col md:flex-row gap-4">
+<div class="panel flex-2 panel-emergency-critical">
+<div class="panel-header panel-header-center">
+<h3 class="panel-title panel-title-flex">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+stroke-width="2">
+<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+</svg>
+Critical Patient Information
+</h3>
+</div>
+<div class="flex justify-between" style="margin-bottom: 2rem;">
+<div>
+<div class="text-sm text-gray-500">Patient Name</div>
+<div class="text-2xl font-bold" id="patient-name">Loading...</div>
+</div>
+</div>
+<div class="blood-group-box" style="background: #fff5f5; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+<div class="text-sm text-red-800 font-bold mb-1">Blood Group</div>
+<div class="text-3xl font-extrabold text-red-600" id="patient-blood-group">--</div>
+</div>
+<div class="grid-cols-2 grid gap-6">
+<div>
+<h4 class="icon-text-header text-red-600">Known Allergies</h4>
+<div class="flex gap-2" id="patient-allergies"></div>
+</div>
+<div>
+<h4 class="icon-text-header text-blue-600">Current Medications</h4>
+<div class="flex gap-2 flex-wrap" id="patient-medications"></div>
+</div>
+</div>
+<div style="margin-top: 2rem;">
+<div class="text-sm text-gray-500">Emergency Contact</div>
+<div class="text-xl font-bold" id="patient-contact">Loading...</div>
+</div>
+</div>
+</div>
+</main>
+
+<script src="../js/script.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+const patientId = getUrlParameter('id');
+const data = getPatientData(patientId);
+if (data) {
+document.getElementById('patient-name').textContent = data.name;
+document.getElementById('patient-blood-group').textContent = data.bloodGroup;
+document.getElementById('patient-contact').textContent = data.emergencyContact;
+// Allergies
+const allergiesContainer = document.getElementById('patient-allergies');
+if (data.allergies) {
+data.allergies.forEach(allergy => {
+const span = document.createElement('span');
+span.className = 'badge-avail';
+span.style.cssText = "background: #fee2e2; padding: 4px 8px; border-radius: 4px; margin-right: 5px; font-size: 0.8rem;";
+span.textContent = allergy;
+allergiesContainer.appendChild(span);
+});
+}
+// Medications
+const medicationsContainer = document.getElementById('patient-medications');
+if (data.medications) {
+data.medications.forEach(med => {
+const span = document.createElement('span');
+span.className = 'badge-avail';
+span.style.cssText = "background: #e0f2fe; padding: 4px 8px; border-radius: 4px; margin-right: 5px; font-size: 0.8rem;";
+span.textContent = typeof med === 'string' ? med : med.name;
+medicationsContainer.appendChild(span);
+});
+}
+}
+});
+</script>
+</body>
+</html>

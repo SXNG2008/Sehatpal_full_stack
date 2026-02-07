@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Health Records - SehatPal</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+<header class="hub-header">
+<div class="container">
+<div class="flex justify-between items-center">
+<div>
+<h1 class="text-xl font-bold">Unified Healthcare Hub</h1>
+</div>
+<div class="flex items-center gap-4">
+<div id="header-name" class="font-bold">Loading...</div>
+<button onclick="window.location.href='../login.html'" class="btn btn-outline text-sm">Logout</button>
+</div>
+</div>
+<nav class="nav-tabs">
+<a href="dashboard.html" class="nav-tab">⚡ Dashboard</a>
+<a href="records.html" class="nav-tab active">📄 Records</a>
+<a href="appointments.html" class="nav-tab">📅 Appointments</a>
+<a href="medications.html" class="nav-tab">💊 Medications</a>
+<a href="emergency_qr.html" class="nav-tab">🏁 Emergency QR</a>
+</nav>
+</div>
+</header>
+<main class="container panel mt-8">
+<div class="flex justify-between items-center mb-6">
+<h3 class="panel-title">Medical Records</h3>
+<button class="btn btn-primary">Upload New</button>
+</div>
+<div id="records-list">
+</div>
+</main>
+<script src="../js/script.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const userId = getCurrentUser();
+    const data = getPatientData(userId);
+    if(data) {
+        document.getElementById('header-name').textContent = data.name;
+        const container = document.getElementById('records-list');
+        data.records.forEach(rec => {
+            container.innerHTML += `
+                <div class="hospital-item">
+                    <div>
+                        <div class="font-bold">${rec.type}</div>
+                        <div class="text-sm text-gray-500">${rec.doctor} • ${rec.date}</div>
+                    </div>
+                    <button class="btn btn-outline text-sm">View</button>
+                </div>`;
+        });
+    }
+});
+</script>
+</body>
+</html>

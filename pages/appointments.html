@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Appointments - SehatPal</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+<header class="hub-header">
+<div class="container">
+<div class="flex justify-between items-center">
+<div>
+<h1 class="text-xl font-bold">Unified Healthcare Hub</h1>
+<p class="text-sm text-gray-500">Your complete health management system</p>
+</div>
+<div class="flex items-center gap-4">
+<div class="text-right">
+<div class="font-bold" id="header-name">Loading...</div>
+<div class="text-sm text-gray-500">ID: <span id="header-id">...</span></div>
+</div>
+<div class="avatar-circle" id="header-avatar"></div>
+<a href="../login.html" class="btn btn-outline text-sm" id="logout-btn">Logout</a>
+</div>
+</div>
+<nav class="nav-tabs">
+<a href="dashboard.html" class="nav-tab">
+<span class="nav-icon">⚡</span> Dashboard
+</a>
+<a href="records.html" class="nav-tab">
+<span class="nav-icon">📄</span> Records
+</a>
+<a href="appointments.html" class="nav-tab active">
+<span class="nav-icon">📅</span> Appointments
+</a>
+<a href="medications.html" class="nav-tab">
+<span class="nav-icon">💊</span> Medications
+</a>
+<a href="emergency_qr.html" class="nav-tab">
+<span class="nav-icon">🏁</span> Emergency QR
+</a>
+</nav>
+</div>
+</header>
+<main class="container panel mt-8">
+<div class="flex justify-between items-center mb-6">
+<div>
+<h3 class="panel-title">Appointments</h3>
+<p class="text-sm text-gray-500">Manage your scheduled appointments</p>
+</div>
+<button class="btn btn-primary btn-book-new">Book New</button>
+</div>
+<div id="appointments-list">
+<div class="text-center text-gray-500 py-8">Loading appointments...</div>
+</div>
+
+<h3 class="panel-title mt-8 mb-4">Available Doctors</h3>
+<p class="text-sm text-gray-500 mb-4">Book appointments with available specialists</p>
+<div class="doctor-grid" style="display: flex; gap: 10px;">
+<button class="btn btn-outline doctor-btn">❤️ Cardiologist</button>
+<button class="btn btn-outline doctor-btn">🧴 Dermatologist</button>
+<button class="btn btn-outline doctor-btn">🦴 Orthopedic</button>
+</div>
+</main>
+
+<script src="../js/script.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+const userId = getCurrentUser();
+if (!userId) {
+window.location.href = "../login.html";
+return;
+}
+const data = getPatientData(userId);
+if (data) {
+document.getElementById('header-name').textContent = data.name;
+document.getElementById('header-id').textContent = userId;
+document.getElementById('header-avatar').textContent = data.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+
+// Appointments Render
+const listContainer = document.getElementById('appointments-list');
+listContainer.innerHTML = '';
+if (data.appointments && data.appointments.length > 0) {
+data.appointments.forEach(appt => {
+const html = `
+<div class="hospital-item items-start">
+<div class="flex items-center gap-4">
+<div class="date-box" style="background: #eff6ff; padding: 10px; border-radius: 8px; text-align: center; min-width: 60px;">
+<div class="text-2xl font-bold" style="color: #2563eb;">${appt.date}</div>
+<div class="text-xs uppercase">${appt.month}</div>
+</div>
+<div>
+<div class="font-bold text-lg">${appt.doctor}</div>
+<div class="text-sm text-gray-500">${appt.spec}</div>
+<div class="flex gap-4 mt-1 text-sm text-gray-500">
+<span>🕒 ${appt.time}</span>
+<span>📍 ${appt.loc}</span>
+</div>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="btn btn-outline text-sm">Reschedule</button>
+</div>
+</div>`;
+listContainer.insertAdjacentHTML('beforeend', html);
+});
+} else {
+listContainer.innerHTML = `<div class="text-center py-12"><p class="text-gray-500">No Upcoming Appointments</p></div>`;
+}
+}
+});
+</script>
+</body>
+</html>
